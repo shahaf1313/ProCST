@@ -134,7 +134,7 @@ Both methods were boosted due to our SiT dataset, and thus resulted in a new sta
 We provide new SOTA checkpoints of the combined ProCST+DAFormer, trained on 
 GTA5&rarr;Cityscapes and Synthia&rarr;Cityscapes. Results can be tested on Cityscapes validation set.
 
-1. [GTA5&rarr;Cityscapes](https://drive.google.com/file/d/1sYb-S-uxgP90Twl7OjY1V7PZPSxpBGrt/view?usp=sharing) checkpoint: 69.5% mIoU
+1. [GTA5&rarr;Cityscapes](https://drive.google.com/file/d/1z0frfWkEmEUACdEIazUsX1zdIPrXlcqJ/view?usp=sharing) checkpoint: 69.5% mIoU
 2. [Synthia&rarr;Cityscapes](https://drive.google.com/file/d/1wSp_iszCCpQcfXblGdfl-8bCVb7kkweL/view?usp=sharing) checkpoint: 62.4% mIoU
 
 In order to evaluate results using the above checkpoints, please refer
