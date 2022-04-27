@@ -1,7 +1,7 @@
 # ProCST: Boosting Semantic Segmentation using Progressive Cyclic Style-Transfer
 
-**[[Arxiv]]()**
-**[[Paper]]()** - Coming Soon
+**[[Arxiv]](https://arxiv.org/abs/2204.11891)**
+**[[Paper]](https://arxiv.org/pdf/2204.11891.pdf)** 
 ![DomainGap](figures/domainGap.png)
 In this work, we propose a **novel two-stage framework** for improving unsupervised domain adaptation (UDA) techniques. 
 
