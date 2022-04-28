@@ -3,6 +3,11 @@
 **[[Arxiv]](https://arxiv.org/abs/2204.11891)**
 **[[Paper]](https://arxiv.org/pdf/2204.11891.pdf)** 
 ![DomainGap](figures/domainGap.png)
+
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/procst-boosting-semantic-segmentation-using/synthetic-to-real-translation-on-gtav-to)](https://paperswithcode.com/sota/synthetic-to-real-translation-on-gtav-to?p=procst-boosting-semantic-segmentation-using)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/procst-boosting-semantic-segmentation-using/image-to-image-translation-on-synthia-to)](https://paperswithcode.com/sota/image-to-image-translation-on-synthia-to?p=procst-boosting-semantic-segmentation-using)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/procst-boosting-semantic-segmentation-using/domain-adaptation-on-synthia-to-cityscapes)](https://paperswithcode.com/sota/domain-adaptation-on-synthia-to-cityscapes?p=procst-boosting-semantic-segmentation-using)
+
 In this work, we propose a **novel two-stage framework** for improving unsupervised domain adaptation (UDA) techniques. 
 
 In the first step, we progressively train a multi-scale neural network to perform an initial transfer between the source data to the target data. 
