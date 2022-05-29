@@ -16,11 +16,33 @@ We denote the new transformed data as **"Source in Target" (SiT).**
 Then, we use the generated SiT data as the input to any standard UDA approach. 
 This new data has a **reduced domain gap** from the desired target domain, and the applied UDA approach **further closes the gap.**
 
-We exhibit the improvement achieved by our framework with two state-of-the-art methods for semantic segmentation, DAFormer and ProDA, on two UDA tasks, GTA5 to Cityscapes and Synthia to Cityscapes. 
+We exhibit the improvement achieved by our framework with two state-of-the-art methods for semantic segmentation, DAFormer and ProDA, on two UDA tasks, GTA5 to Cityscapes and Synthia to Cityscapes.
 
-This resulted in a *new state-of-the-art performance* on UDA semantic segmentation, in terms of mIoU,  for both GTA5 and Synthia datasets.
+Checkpoints of ProCST+DAFormer are provided at the bottom of this page.
 
-The new SOTA checkpoints of ProCST+DAFormer are provided at the bottom of this page.
+
+**NEW:** we report also on improvement of the new state-of-the-art UDA method HRDA, currently on the GTA5 to Cityscapes task. Synthia to Cityscapes still in progress.
+
+Results summary using our runs:
+
+GTA5 &rarr; Cityscapes
+<!-- TABLE_GENERATE_START -->
+| Method   | Source [mIoU] | SiT [mIoU]    | Relative  | 
+| -------- | ------------- | ------------- | --------- |
+| ProDA    | 57.5%         | 58.6%         | **+1.1%** |
+| DAFormer | 67.9%         | 69.4%         | **+1.5%** |
+| HRDA     | 72.8%         | 74.0%         | **+1.2%** |
+<!-- TABLE_GENERATE_END -->
+
+Synthia &rarr; Cityscapes
+<!-- TABLE_GENERATE_START -->
+| Method   | Source [mIoU] | SiT [mIoU]  | Relative  |
+| -------- | ------------- | ----------- | --------- |
+| ProDA    | 55.5%         | 56.1%       | **+0.6%** |
+| DAFormer | 60.5%         | 61.6%       | **+1.1%** |
+| HRDA     | WIP           | WIP         | WIP       |
+<!-- TABLE_GENERATE_END -->
+
 ![model_and_loss](figures/fullModelAndLoss.png)
 Translation GIF. Top row: GTA5 &rarr; Cityscapes translation, bottom row: Synthia &rarr; Cityscapes translation
 ![procst_translation \label{2}](figures/procst_translation.gif) 
@@ -133,10 +155,10 @@ Preservation property of ProCST.
 We tested our SiT datasets on two state-of-the-art UDA methods:
 [DAFormer](https://github.com/lhoyer/DAFormer) and [ProDA](https://github.com/microsoft/ProDA).
 
-Both methods were boosted due to our SiT dataset, and thus resulted in a new state-of-the-art UDA accuracy in terms of mIoU. Results detailed in the paper.
+Both methods were boosted due to our SiT dataset. Results detailed in the paper.
 
-## SOTA Checkpoints: ProCST + DAFormer
-We provide new SOTA checkpoints of the combined ProCST+DAFormer, trained on 
+## Checkpoints: ProCST + DAFormer
+We provide checkpoints of the combined ProCST+DAFormer, trained on 
 GTA5&rarr;Cityscapes and Synthia&rarr;Cityscapes. Results can be tested on Cityscapes validation set.
 
 1. [GTA5&rarr;Cityscapes](https://drive.google.com/file/d/1z0frfWkEmEUACdEIazUsX1zdIPrXlcqJ/view?usp=sharing) checkpoint: 69.5% mIoU

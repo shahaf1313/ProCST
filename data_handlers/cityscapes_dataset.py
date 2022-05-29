@@ -19,7 +19,7 @@ class cityscapesDataSet(domainAdaptationDataSet):
         image = Image.open(osp.join(self.root, "leftImg8bit/%s/%s" % (self.set, name))).convert('RGB')
         if self.get_original_image:
             pass
-        else: # use random crop, don't resize @ cityscapes:
+        else: # aspect ratio fits to the objective, thus use only resize @ cityscapes:
             image = image.resize(self.domain_resize, Image.BICUBIC)
 
         scales_pyramid, label, label_copy = None, None, None
