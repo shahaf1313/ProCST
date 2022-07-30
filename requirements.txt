@@ -6,3 +6,4 @@ scipy==1.6.3
 torch==1.10.1+cu113
 tqdm==4.48.2
 tensorboard==2.4.0
+protobuf==3.20.*

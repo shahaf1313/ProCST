@@ -1,12 +1,8 @@
-# ProCST: Boosting Semantic Segmentation using Progressive Cyclic Style-Transfer
+# ProCST: Boosting Semantic Segmentation Using Progressive Cyclic Style-Transfer
 
 **[[Arxiv]](https://arxiv.org/abs/2204.11891)**
 **[[Paper]](https://arxiv.org/pdf/2204.11891.pdf)** 
 ![DomainGap](figures/domainGap.png)
-
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/procst-boosting-semantic-segmentation-using/synthetic-to-real-translation-on-gtav-to)](https://paperswithcode.com/sota/synthetic-to-real-translation-on-gtav-to?p=procst-boosting-semantic-segmentation-using)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/procst-boosting-semantic-segmentation-using/image-to-image-translation-on-synthia-to)](https://paperswithcode.com/sota/image-to-image-translation-on-synthia-to?p=procst-boosting-semantic-segmentation-using)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/procst-boosting-semantic-segmentation-using/domain-adaptation-on-synthia-to-cityscapes)](https://paperswithcode.com/sota/domain-adaptation-on-synthia-to-cityscapes?p=procst-boosting-semantic-segmentation-using)
 
 In this work, we propose a **novel two-stage framework** for improving unsupervised domain adaptation (UDA) techniques. 
 
@@ -16,35 +12,22 @@ We denote the new transformed data as **"Source in Target" (SiT).**
 Then, we use the generated SiT data as the input to any standard UDA approach. 
 This new data has a **reduced domain gap** from the desired target domain, and the applied UDA approach **further closes the gap.**
 
-We exhibit the improvement achieved by our framework with two state-of-the-art methods for semantic segmentation, DAFormer and ProDA, on two UDA tasks, GTA5 to Cityscapes and Synthia to Cityscapes.
+We exhibit the improvement achieved by our framework with two state-of-the-art UDA methods for semantic segmentation, DAFormer and ProDA, on two UDA tasks, GTA5 to Cityscapes and Synthia to Cityscapes.
 
-Checkpoints of ProCST+DAFormer are provided at the bottom of this page.
+Full SiT datasets and checkpoints of boosted UDA methods are provided at the bottom of this page.
 
-
-**NEW:** we report also on improvement of the new state-of-the-art UDA method HRDA, currently on the GTA5 to Cityscapes task. Synthia to Cityscapes still in progress.
+**NEW:** We report on improvement of the new UDA method HRDA!
 
 Results summary using our runs:
 
-GTA5 &rarr; Cityscapes
-<!-- TABLE_GENERATE_START -->
-| Method   | Source [mIoU] | SiT [mIoU]    | Relative  | 
-| -------- | ------------- | ------------- | --------- |
-| ProDA    | 57.5%         | 58.6%         | **+1.1%** |
-| DAFormer | 67.9%         | 69.4%         | **+1.5%** |
-| HRDA     | 72.8%         | 74.0%         | **+1.2%** |
-<!-- TABLE_GENERATE_END -->
+![ProCSTImprovement](figures/procst_teaser.png)
 
-Synthia &rarr; Cityscapes
-<!-- TABLE_GENERATE_START -->
-| Method   | Source [mIoU] | SiT [mIoU]  | Relative  |
-| -------- | ------------- | ----------- | --------- |
-| ProDA    | 55.5%         | 56.1%       | **+0.6%** |
-| DAFormer | 60.5%         | 61.6%       | **+1.1%** |
-| HRDA     | WIP           | WIP         | WIP       |
-<!-- TABLE_GENERATE_END -->
+Full model and losses flowchart:
 
 ![model_and_loss](figures/fullModelAndLoss.png)
+
 Translation GIF. Top row: GTA5 &rarr; Cityscapes translation, bottom row: Synthia &rarr; Cityscapes translation
+
 ![procst_translation \label{2}](figures/procst_translation.gif) 
 
 ## Setup Environment And Datasets
@@ -77,7 +60,7 @@ gt_trainvaltest.zip from [here](https://www.cityscapes-dataset.com/downloads/)
 and extract them to `data/cityscapes`. Pay attention to delete the corrupted image 
 'troisdorf_000000_000073_leftImg8bit.png' from the dataset, as the link suggests. 
 
-**GTA:** Please download all image and label packages from
+**GTA5:** Please download all image and label packages from
 [here](https://download.visinf.tu-darmstadt.de/data/from_games/) and extract
 them to `data/gta`.
 
@@ -150,12 +133,27 @@ python ./create_sit_dataset.py --source=synthia --src_data_dir=data/synthia --ba
 
 After successfully generating SiT dataset, we can now replace the original source images 
 with the resulting SiT images. Segmentation maps remain unchanged due to the Content 
-Preservation property of ProCST. 
+Preservation property of ProCST.
 
-We tested our SiT datasets on two state-of-the-art UDA methods:
-[DAFormer](https://github.com/lhoyer/DAFormer) and [ProDA](https://github.com/microsoft/ProDA).
+## Checkpoints: ProCST + HRDA
+We provide checkpoints of the combined ProCST+HRDA, trained on
+GTA5&rarr;Cityscapes and Synthia&rarr;Cityscapes. Results can be tested on Cityscapes validation set.
 
-Both methods were boosted due to our SiT dataset. Results detailed in the paper.
+1. [GTA5&rarr;Cityscapes](https://drive.google.com/file/d/15T_RtIrrwxU_yKotPKfFUSMa1lOP-5zo/view?usp=sharing) checkpoint: 74.7% mIoU
+2. [Synthia&rarr;Cityscapes](https://drive.google.com/file/d/15VAP0R11ViCvH0OSeM3k-eb8RCcKg-R-/view?usp=sharing) checkpoint: 66.7% mIoU
+
+In order to evaluate results using the above checkpoints, please refer
+to the original [HRDA repository](https://github.com/lhoyer/HRDA).
+
+After setting up the required environment, use the given checkpoints as an input to test shell script:
+```shell
+cd path/to/HRDA/directory
+cd work_dirs # if this directory does not exits, than please create it.
+# download checkpoint .zip file and unzip it in this directory.
+chmod +w path/to/checkpoint_directory
+cd path/to/HRDA/directory
+sh test.sh path/to/checkpoint_directory
+```
 
 ## Checkpoints: ProCST + DAFormer
 We provide checkpoints of the combined ProCST+DAFormer, trained on 
@@ -165,8 +163,9 @@ GTA5&rarr;Cityscapes and Synthia&rarr;Cityscapes. Results can be tested on Citys
 2. [Synthia&rarr;Cityscapes](https://drive.google.com/file/d/1wSp_iszCCpQcfXblGdfl-8bCVb7kkweL/view?usp=sharing) checkpoint: 62.4% mIoU
 
 In order to evaluate results using the above checkpoints, please refer
-to the original [DAFormer repository](https://github.com/lhoyer/DAFormer).  After setting up the required environment, 
-use the given checkpoints as an input to test shell script:
+to the original [DAFormer repository](https://github.com/lhoyer/DAFormer). 
+
+After setting up the required environment, use the given checkpoints as an input to test shell script:
 ```shell
 cd path/to/DAFormer/directory
 cd work_dirs # if this directory does not exits, than please create it.
@@ -176,9 +175,14 @@ cd path/to/DAFormer/directory
 sh test.sh path/to/checkpoint_directory
 ```
 
+## ProCST's translated SiT Datasets
+We provide the SiT datasets that were translated by ProCST of both GTA5 and Synthia to Cityscapes:
+1. [SiT dataset of GTA5 translated to Cityscapes](https://drive.google.com/file/d/1yIeWiugLKfe7fU7ejY8w37q5iN137uZB/view?usp=sharing)
+2. [SiT dataset of Synthia translated to Cityscapes](https://drive.google.com/file/d/1YLYhDbfxdAHd9vatELM97IFMSxi2ldi6/view?usp=sharing)
 
 
 ## Acknowledgements
 This project uses on the following open-source projects. We thank their authors for making the source code publically available.
+* [HRDA](https://github.com/lhoyer/HRDA)
 * [DAFormer](https://github.com/lhoyer/DAFormer)
 * [ProDA](https://github.com/microsoft/ProDA)
