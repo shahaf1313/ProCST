@@ -23,8 +23,8 @@ def get_arguments():
     parser.add_argument('--skip_created_files', default=False, action='store_true', help='Skip already created files in the output directory.')
 
     # Dataset parameters:
-    parser.add_argument("--source", type=str, default='gta5', help='Source dataset. gta5/synthia')
-    parser.add_argument("--target", type=str, default='cityscapes', help='target dataset. cityscapes')
+    parser.add_argument("--source", type=str, default='gta5', help='Source dataset. gta5/synthia/zerowastev1')
+    parser.add_argument("--target", type=str, default='cityscapes', help='target dataset. cityscapes/zerowastev2')
     parser.add_argument("--src_data_dir", type=str, default='data/gta', help='Path to the directory containing the source dataset.')
     parser.add_argument("--trg_data_dir", type=str, default='data/cityscapes', help='Path to the directory containing the target dataset.')
     parser.add_argument("--num_workers", type=int, default=6, help="Number of threads for each worker")

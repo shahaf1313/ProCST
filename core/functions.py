@@ -4,7 +4,7 @@ import torch.nn as nn
 import math
 from PIL import Image
 import os
-from core.constants import palette, NUM_CLASSES, IGNORE_LABEL
+from core.constants import PALETTE_VEHACLES, NUM_CLASSES, IGNORE_LABEL
 
 def denorm(x):
     out = (x + 1) / 2
@@ -64,7 +64,7 @@ def save_networks(path, netDst, netGst, netDts, netGts, Gst, Gts, Dst, Dts, opt,
             if semseg_cs != None:
                 torch.save(semseg_cs, '%s/semseg_cs.pth' % (path))
 
-def colorize_mask(mask):
+def colorize_mask(mask, palette=PALETTE_VEHACLES):
     # mask: tensor of the mask
     # returns: numpy array of the colorized mask
     new_mask = Image.fromarray(mask.cpu().numpy().astype(np.uint8)).convert('P')

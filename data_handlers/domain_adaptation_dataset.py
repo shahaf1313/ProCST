@@ -15,7 +15,6 @@ class domainAdaptationDataSet(data.Dataset):
         self.num_scales = num_scales
         self. curr_scale = curr_scale
         self.set = set
-        self.trans = transforms.ToTensor()
         self.crop_size = IMG_CROP_SIZE_SEMSEG
         self.ignore_label = IGNORE_LABEL
         self.get_image_label = get_image_label
