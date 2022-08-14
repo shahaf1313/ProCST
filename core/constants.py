@@ -1,7 +1,6 @@
 NUM_CLASSES = 19
 IGNORE_LABEL = 255
 NUM_CLASSES_ZEROWASTE = 5
-IGNORE_LABEL_ZEROWASTE = 0
 
 PALETTE_VEHACLES = [128, 64, 128, 244, 35, 232, 70, 70, 70, 102, 102, 156, 190, 153, 153, 153, 153, 153, 250, 170, 30,
                     220, 220, 0, 107, 142, 35, 152, 251, 152, 70, 130, 180, 220, 20, 60, 255, 0, 0, 0, 0, 142, 0, 0, 70,
@@ -10,7 +9,7 @@ zero_pad = 256 * 3 - len(PALETTE_VEHACLES)
 for i in range(zero_pad):
     PALETTE_VEHACLES.append(0)
 
-PALETTE_ZEROWASTE = [0, 0, 0, 128, 64, 128, 244, 35, 232, 70, 70, 70, 102, 102, 156]
+PALETTE_ZEROWASTE = [0, 0, 0, 128, 64, 128, 244, 35, 232, 70, 70, 70, 102, 102, 156, 255, 0, 0]
 zero_pad = 256 * 3 - len(PALETTE_ZEROWASTE)
 for i in range(zero_pad):
     PALETTE_ZEROWASTE.append(0)

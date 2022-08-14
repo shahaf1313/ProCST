@@ -92,9 +92,13 @@ def compute_cm_batch_torch(y_pred, y_true, ignore_label, classes):
     for i in range(batch_size):
         y_pred_curr = y_pred[i, :, :]
         y_true_curr = y_true[i, :, :]
-        inds_to_calc = y_true_curr != ignore_label
-        y_pred_curr = y_pred_curr[inds_to_calc]
-        y_true_curr = y_true_curr[inds_to_calc]
+        if ignore_label == None:
+            y_pred_curr = y_pred_curr.flatten()
+            y_true_curr = y_true_curr.flatten()
+        else:
+            inds_to_calc = y_true_curr != ignore_label
+            y_pred_curr = y_pred_curr[inds_to_calc]
+            y_true_curr = y_true_curr[inds_to_calc]
         assert y_pred_curr.shape == y_true_curr.shape
         confusion_matrix += confusion_matrix_torch(y_pred_curr, y_true_curr, classes)
     return confusion_matrix

@@ -2,7 +2,7 @@ import os
 from data_handlers.domain_adaptation_dataset import domainAdaptationDataSet
 from PIL import Image
 import numpy as np
-from core.constants import RESIZE_SHAPE
+from core.constants import RESIZE_SHAPE, NUM_CLASSES_ZEROWASTE
 
 class SynthWasteDataset(domainAdaptationDataSet):
     def __init__(self, root, images_list_path, scale_factor, num_scales, curr_scale, set, get_image_label=False, get_image_label_pyramid=False, get_filename=False, get_original_image=False):
@@ -43,7 +43,9 @@ class SynthWasteDataset(domainAdaptationDataSet):
                 label = label.resize(self.domain_resize, Image.NEAREST)
                 label = label.crop((left, upper, right, lower))
             label = np.asarray(label, np.uint8)
-            label_copy = np.copy(label)
+            label_copy = np.zeros(label.shape)
+            for i in range(1,NUM_CLASSES_ZEROWASTE):
+                label_copy[label==i] = i
 
         scales_pyramid = self.GeneratePyramid(image)
         if self.get_image_label:

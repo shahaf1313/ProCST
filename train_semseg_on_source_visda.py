@@ -38,6 +38,9 @@ def main(opt):
             if steps > opt.num_steps:
                 keep_training = False
                 break
+            if opt.debug_run and steps > opt.debug_stop_iteration:
+                keep_training = False
+                break
 
             semseg_optimizer.zero_grad()
             source_image = source_scales[opt.curr_scale].to(opt.device)
@@ -72,7 +75,7 @@ def main(opt):
         print('train semseg: starting validation after epoch %d.' % epoch_num)
         iou, miou, cm = calculte_validation_accuracy(semseg_net, source_val_loader, opt, epoch_num)
         save_epoch_accuracy(opt.tb, 'Validtaion', iou, miou, epoch_num)
-        if epoch_num > 15 and miou > best_miou:
+        if epoch_num > 5 and miou > best_miou:
             best_miou = miou
             torch.save(semseg_net.module, '%s/semseg_trained_on_%s_miou_%.2f.pth' % (opt.out_folder, opt.source, miou))
         epoch_num += 1
@@ -93,11 +96,11 @@ def calculte_validation_accuracy(semseg_net, val_loader, opt, epoch_num):
     cm = torch.zeros((NUM_CLASSES_ZEROWASTE, NUM_CLASSES_ZEROWASTE)).cuda()
     for batch_num, (images, labels) in enumerate(val_loader):
         images = images[opt.curr_scale].to(opt.device)
-        labels = labels[opt.curr_scale].to(opt.device)
+        labels = labels.to(opt.device)
         with torch.no_grad():
             pred_softs = semseg_net(images)
             pred_labels = torch.argmax(pred_softs, dim=1)
-            cm += compute_cm_batch_torch(pred_labels, labels, IGNORE_LABEL_ZEROWASTE, NUM_CLASSES_ZEROWASTE)
+            cm += compute_cm_batch_torch(pred_labels, labels, None, NUM_CLASSES_ZEROWASTE)
             if batch_num in rand_batchs:
                 t        = denorm(images[0])
                 t_lbl    = colorize_mask(labels[0], palette=PALETTE_ZEROWASTE)
@@ -119,7 +122,7 @@ if __name__ == "__main__":
     opt = post_config(opt)
     from torch.optim.lr_scheduler import _LRScheduler
     from semseg_models import CreateSemsegModel
-    from core.constants import NUM_CLASSES_ZEROWASTE, IGNORE_LABEL_ZEROWASTE, id_to_name_zerowaste, PALETTE_ZEROWASTE
+    from core.constants import NUM_CLASSES_ZEROWASTE, id_to_name_zerowaste, PALETTE_ZEROWASTE
     from core.functions import compute_cm_batch_torch, compute_iou_torch
     from data_handlers import CreateSrcDataLoader
     import torch
