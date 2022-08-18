@@ -15,7 +15,7 @@ for i in range(zero_pad):
     PALETTE_ZEROWASTE.append(0)
 
 IMG_CROP_SIZE_SEMSEG = (1024, 512)
-RESIZE_SHAPE = {'gta5': (1126, 619), 'synthia':(1113, 661), 'cityscapes':(1024,512), 'zerowastev1':(1104,621), 'zerowastev2':(1104,621), 'synthwaste':(1100,1100), 'synthwaste_aug':(1100,1100)}
+RESIZE_SHAPE = {'gta5': (1126, 619), 'synthia':(1113, 661), 'cityscapes':(1024,512), 'zerowastev1':(1104,621), 'zerowastev2':(1104,621), 'synthwaste':(1104,621), 'synthwaste_aug':(1104,621)}
 DATASETS_IMG_SIZE = {'gta5': (1914, 1052), 'synthia':(1280, 760), 'cityscapes':(2048,1024)}
 BEST_MIOU = 0.
 
@@ -23,7 +23,6 @@ BEST_MIOU = 0.
 
 #ZeroWaste labels:
 id_to_name_zerowaste = {0: 'background', 1 : 'rigid_plastic', 2 : 'cardboard', 3 : 'metal', 4 : 'soft_plastic'}
-
 
 # Cityscapes labels
 from collections import namedtuple

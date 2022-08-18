@@ -106,8 +106,10 @@ def post_config(opt):
         for s in sys.argv:
             args += s + ' '
         opt.args = args
-        opt.pretrained_deeplabv2_on_gta     = r'./pretrained/pretrained_semseg_on_gta5.pth'
-        opt.pretrained_deeplabv2_on_synthia = r'./pretrained/pretrained_semseg_on_synthia.pth'
+        opt.pretrained_deeplabv2_on_source_path =   {'gta5': r'./pretrained/pretrained_semseg_on_gta5.pth',
+                                                     'synthia': r'./pretrained/pretrained_semseg_on_synthia.pth',
+                                                     'zerowastev1': r'./pretrained/pretrained_semseg_on_zerowastev1.pth',
+                                                     'synthwaste': r'./pretrained/pretrained_semseg_on_synthwaste.pth'}
         opt.folder_string = '%sGPU%d/' % (datetime.datetime.now().strftime('%d-%m-%Y::%H:%M:%S'), opt.gpus[0])
         opt.out_folder = '%s/%s' % (opt.checkpoints_dir, opt.folder_string)
         opt.src_data_list = './dataset/{}_list/'.format(opt.source)

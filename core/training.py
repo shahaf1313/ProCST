@@ -103,12 +103,7 @@ def train_single_scale(netDst, netGst, netDts, netGts, Gst: list, Gts: list, Dst
                                     weight_decay=opt.weight_decay)
         optimizer_semseg_gen = optim.SGD(semseg_cs.module.optim_parameters(opt) if (len(opt.gpus) > 1) else semseg_cs.optim_parameters(opt), lr=opt.lr_semseg / 4,
                                        momentum=opt.momentum, weight_decay=opt.weight_decay)
-        if opt.source == 'gta5':
-            semseg_pretrained_source = nn.DataParallel(torch.load(opt.pretrained_deeplabv2_on_gta)) if (len(opt.gpus) > 1) else torch.load(opt.pretrained_deeplabv2_on_gta)
-        elif opt.source == 'synthia':
-            semseg_pretrained_source = nn.DataParallel(torch.load(opt.pretrained_deeplabv2_on_synthia)) if (len(opt.gpus) > 1) else torch.load(opt.pretrained_deeplabv2_on_synthia)
-        else:
-            raise NotImplemented()
+        semseg_pretrained_source = nn.DataParallel(torch.load(opt.pretrained_deeplabv2_on_source_path[opt.source])) if (len(opt.gpus) > 1) else torch.load(opt.pretrained_deeplabv2_on_source_path[opt.source])
         semseg_pretrained_source.eval()
     else:
         optimizer_semseg_cs, optimizer_semseg_gen, semseg_pretrained_source = None, None, None
@@ -223,7 +218,7 @@ def train_single_scale(netDst, netGst, netDts, netGts, Gst: list, Gts: list, Dst
             ############################
             # (3) Update semantic segmentation network: minimize CE Loss on converted images (Use GT of source domain):
             ###########################
-            if not opt.no_semseg and opt.last_scale:
+            if opt.lambda_labels > 0 and not opt.no_semseg and opt.last_scale:
                 optimizer_semseg_cs.zero_grad()
                 if not opt.warmup:
                     optimizerGst.zero_grad()
@@ -260,7 +255,7 @@ def train_single_scale(netDst, netGst, netDts, netGts, Gst: list, Gts: list, Dst
                 opt.tb.add_image('Scale%d/Cyclic/target' % opt.curr_scale, t, save_pics_int * opt.save_pics_rate)
                 opt.tb.add_image('Scale%d/Cyclic/target_in_source' % opt.curr_scale, tis, save_pics_int * opt.save_pics_rate)
                 opt.tb.add_image('Scale%d/Cyclic/target_in_source_in_target' % opt.curr_scale, tisit, save_pics_int * opt.save_pics_rate)
-                if not opt.no_semseg and opt.last_scale:
+                if opt.lambda_labels > 0 and not opt.no_semseg and opt.last_scale:
                     sit_label = colorize_mask(semseg_labels[0])
                     softs_max = torch.nn.functional.softmax(semseg_softs, dim=1)
                     hist_values = softs_max.max(dim=1)[0][0]
@@ -286,12 +281,12 @@ def train_single_scale(netDst, netGst, netDts, netGts, Gst: list, Gts: list, Dst
         ############################
         # (5) Validate performance after each epoch if we are at the last scale:
         ############################
-        if not opt.no_semseg and opt.last_scale:
-            iou, miou, cm = calculte_validation_accuracy(semseg_cs, opt.target_validation_loader, epoch_num, opt)
-            export_epoch_accuracy(opt, iou, miou, cm, epoch_num)
-            if miou > opt.best_miou:
-                opt.best_miou = miou
-                save_networks(os.path.join(opt.checkpoints_dir, '%.2f_mIoU_model' % (miou)), netDst, netGst, netDts, netGts, Gst, Gts, Dst, Dts, opt, semseg_cs)
+        # if not opt.no_semseg and opt.last_scale:
+        #     iou, miou, cm = calculte_validation_accuracy(semseg_cs, opt.target_validation_loader, epoch_num, opt)
+        #     export_epoch_accuracy(opt, iou, miou, cm, epoch_num)
+        #     if miou > opt.best_miou:
+        #         opt.best_miou = miou
+        #         save_networks(os.path.join(opt.checkpoints_dir, '%.2f_mIoU_model' % (miou)), netDst, netGst, netDts, netGts, Gst, Gts, Dst, Dts, opt, semseg_cs)
         epoch_num += 1
 
     save_networks(opt.outf, netDst, netGst, netDts, netGts, Gst, Gts, Dst, Dts, opt, semseg_cs)
@@ -367,7 +362,7 @@ def cycle_consistency_loss(source_scales, currGst, Gst_pyramid,
     loss_sts.backward(retain_graph=not opt.no_semseg and opt.last_scale)
 
     # Source Cyclic Label Loss:
-    if not opt.no_semseg and opt.last_scale and not opt.warmup:
+    if opt.lambda_labels > 0 and not opt.no_semseg and opt.last_scale and not opt.warmup:
         softs_source_labels, loss_source_labels = semseg_source(sitis_image, source_label)
         loss_source_labels = loss_source_labels.mean()
         losses['SourceLabelLoss'] = loss_source_labels.item()
