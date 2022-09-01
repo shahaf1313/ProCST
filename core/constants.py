@@ -16,7 +16,7 @@ for i in range(zero_pad):
 
 IMG_CROP_SIZE_SEMSEG = (1024, 512)
 RESIZE_SHAPE = {'gta5': (1126, 619), 'synthia':(1113, 661), 'cityscapes':(1024,512), 'zerowastev1':(1104,621), 'zerowastev2':(1104,621), 'synthwaste':(1104,621), 'synthwaste_aug':(1104,621)}
-DATASETS_IMG_SIZE = {'gta5': (1914, 1052), 'synthia':(1280, 760), 'cityscapes':(2048,1024)}
+DATASETS_IMG_SIZE = {'gta5': (1914, 1052), 'synthia':(1280, 760), 'cityscapes':(2048,1024), 'zerowastev1':(1920,1080), 'zerowastev2':(1920,1080), 'synthwaste':(1920,1080), 'synthwaste_aug':(1920,1080)}
 BEST_MIOU = 0.
 
 
