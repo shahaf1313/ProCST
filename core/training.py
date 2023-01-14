@@ -185,7 +185,7 @@ def train_single_scale(netDst, netGst, netDts, netGts, Gst: list, Gts: list, Dst
             # train generator networks between domains (S->T, T->S)
             optimizerGst.zero_grad()
             optimizerGts.zero_grad()
-            if not opt.no_semseg and opt.last_scale and not opt.warmup:
+            if not opt.no_semseg and opt.last_scale:# and not opt.warmup:
                 optimizer_semseg_gen.zero_grad()
 
             # S -> T:
@@ -211,7 +211,7 @@ def train_single_scale(netDst, netGst, netDts, netGts, Gst: list, Gts: list, Dst
 
             optimizerGst.step()
             optimizerGts.step()
-            if not opt.no_semseg and opt.last_scale and not opt.warmup:
+            if not opt.no_semseg and opt.last_scale:# and not opt.warmup:
                 optimizer_semseg_gen.step()
             generator_steps += 1
 
@@ -220,19 +220,22 @@ def train_single_scale(netDst, netGst, netDts, netGts, Gst: list, Gts: list, Dst
             ###########################
             if opt.lambda_labels > 0 and not opt.no_semseg and opt.last_scale:
                 optimizer_semseg_cs.zero_grad()
-                if not opt.warmup:
-                    optimizerGst.zero_grad()
+                # if not opt.warmup:
+                optimizerGst.zero_grad()
                 # Train semseg on GTA5 image converted to CS, using GTA5 labels:
                 prev = concat_pyramid(Gst, source_scales, opt)
                 fake_image = netGst(source_scales[-1], prev)
                 semseg_softs, semseg_loss = semseg_cs(fake_image, source_label)
                 semseg_loss = semseg_loss.mean()
                 semseg_labels = semseg_softs.argmax(1)
+                #todo: delete
+                if opt.warmup:
+                    semseg_loss *= 0
                 semseg_loss.backward()
                 opt.tb.add_scalar('Semseg/SemsegLoss', semseg_loss.item(), semseg_steps)
                 optimizer_semseg_cs.step()
-                if not opt.warmup:
-                    optimizerGst.step()
+                #if not opt.warmup:
+                optimizerGst.step()
                 semseg_steps += 1
 
             if int(steps / opt.print_rate) >= print_int or steps == 0:
@@ -265,9 +268,9 @@ def train_single_scale(netDst, netGst, netDts, netGts, Gst: list, Gts: list, Dst
                     opt.tb.add_histogram('Scale%d/SemsegCS/source_in_target_histogram' % opt.curr_scale, hist_values, save_pics_int * opt.save_pics_rate, bins='auto')
                     opt.tb.add_image('Scale%d/SemsegCS/source_label' % opt.curr_scale, s_label, save_pics_int * opt.save_pics_rate)
                     opt.tb.add_image('Scale%d/LabelsCyclic/source_label' % opt.curr_scale, s_label, save_pics_int * opt.save_pics_rate)
-                    if not opt.warmup:
-                        sitis_label = colorize_mask(cyc_images['sitis_softs'].argmax(1)[0])
-                        opt.tb.add_image('Scale%d/LabelsCyclic/sitis_label' % opt.curr_scale, sitis_label, save_pics_int * opt.save_pics_rate)
+                    # if not opt.warmup:
+                    sitis_label = colorize_mask(cyc_images['sitis_softs'].argmax(1)[0])
+                    opt.tb.add_image('Scale%d/LabelsCyclic/sitis_label' % opt.curr_scale, sitis_label, save_pics_int * opt.save_pics_rate)
                 save_pics_int += 1
 
             # Save network checkpoint every opt.save_checkpoint_rate steps:
@@ -362,9 +365,12 @@ def cycle_consistency_loss(source_scales, currGst, Gst_pyramid,
     loss_sts.backward(retain_graph=not opt.no_semseg and opt.last_scale)
 
     # Source Cyclic Label Loss:
-    if opt.lambda_labels > 0 and not opt.no_semseg and opt.last_scale and not opt.warmup:
+    if opt.lambda_labels > 0 and not opt.no_semseg and opt.last_scale:# and not opt.warmup:
         softs_source_labels, loss_source_labels = semseg_source(sitis_image, source_label)
         loss_source_labels = loss_source_labels.mean()
+        #todo: delete
+        if opt.warmup:
+            loss_source_labels *= 0
         losses['SourceLabelLoss'] = loss_source_labels.item()
         images['sitis_softs'] = softs_source_labels
         loss_source_labels *= opt.lambda_labels
